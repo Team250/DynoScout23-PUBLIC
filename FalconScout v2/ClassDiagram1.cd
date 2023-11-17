@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Falcon_Scouting_Software_2015.MatchState">
+    <Position X="2.5" Y="0.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.SCOUTER_NAME" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.ACQUIRED_RC" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.AUTO_ZONE" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.ROBOT_MODE" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.SCORED_RC" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.ACQUIRED_ZONE" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.STACKS" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.SCORED_ZONE" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.SCORED_COOP" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.CYCLE_DIRECTION" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.ACQUIRED_COOP" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Falcon_Scouting_Software_2015.MatchState.MATCHEVENT_NAME" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>MatchState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CBIhAYI1CQAAMDodeIMCAgWEMCLYAUABCiAMAIBFayA=</HashCode>
+      <FileName>MatchState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
