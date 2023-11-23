@@ -1141,6 +1141,7 @@ namespace T250DynoScout_v2023
                                             int bluefoulsint = bluefouls;
                                             int redfoulsint = redfouls;
 
+
                                             int teststop = 0;
 
                                             using (var db = new SeasonContext())
