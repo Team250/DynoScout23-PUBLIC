@@ -28,7 +28,7 @@ namespace T250DynoScout_v2023
         public enum NODELBL { Select, Node }
         public enum MATCHEVENT_NAME { Match_Event, Fumbled, Broke_Down, Got_Stuck, Jammed_Piece, Lost_Parts, No_Show, Partner_Engage, Tipped_Over }
         //public enum SCOUTER_NAME_ALT { Select_AltName, Sub1, Sub2, Sub3, }
-        public enum SCOUTER_NAME { Select_Name, TrainedScouter1, TrainedScouter2, TrainedScouter3, TrainedScouter4, TrainedScouter5, TrainedScouter6, TrainedScouter7, TrainedScouter8, TrainedScouter9, TrainedScouter10, TrainedScouter11, TrainedScouter12 }
+        public enum SCOUTER_NAME { Select_Name, Scouter1, Scouter2, Scouter3, Scouter4, Scouter5, Scouter6, Scouter7, Scouter8, Scouter9, Scouter10, Scouter11, Scouter12 }
 
         public int APoints;
         public int GPoints;
