@@ -152,11 +152,6 @@
     <Compile Include="1. Model\DatabaseSchema.cs" />
     <Compile Include="3. Controller\ProgramStart.cs" />
     <Compile Include="ReadMe.cs" />
-    <Compile Include="DataSet1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateDatabase.cs">
       <SubType>Form</SubType>
@@ -164,10 +159,10 @@
     <Compile Include="UpdateDatabase.Designer.cs">
       <DependentUpon>UpdateDatabase.cs</DependentUpon>
     </Compile>
-    <Compile Include="_2023seasondbDataSet6.Designer.cs">
+    <Compile Include="_2023seasondbDataSet1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>_2023seasondbDataSet6.xsd</DependentUpon>
+      <DependentUpon>_2023seasondbDataSet1.xsd</DependentUpon>
     </Compile>
     <EmbeddedResource Include="2. View\Screens\CollectionForm.resx">
       <DependentUpon>CollectionForm.cs</DependentUpon>
@@ -188,6 +183,7 @@
     </Compile>
     <EmbeddedResource Include="UpdateDatabase.resx">
       <DependentUpon>UpdateDatabase.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="0. Configuration Items\App.config">
       <SubType>Designer</SubType>
@@ -197,17 +193,8 @@
     <None Include="0. Configuration Items\Utilities, etc\jsreport-net-embedded.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="App.config" />
-    <None Include="DataSet1.xsc">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
-    </None>
-    <None Include="DataSet1.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>DataSet1.Designer.cs</LastGenOutput>
+    <None Include="App.config">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="DataSet1.xss">
-      <DependentUpon>DataSet1.xsd</DependentUpon>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -219,16 +206,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="_2023seasondbDataSet6.xsc">
-      <DependentUpon>_2023seasondbDataSet6.xsd</DependentUpon>
+    <None Include="_2023seasondbDataSet1.xsc">
+      <DependentUpon>_2023seasondbDataSet1.xsd</DependentUpon>
     </None>
-    <None Include="_2023seasondbDataSet6.xsd">
+    <None Include="_2023seasondbDataSet1.xsd">
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>_2023seasondbDataSet6.Designer.cs</LastGenOutput>
+      <LastGenOutput>_2023seasondbDataSet1.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="_2023seasondbDataSet6.xss">
-      <DependentUpon>_2023seasondbDataSet6.xsd</DependentUpon>
+    <None Include="_2023seasondbDataSet1.xss">
+      <DependentUpon>_2023seasondbDataSet1.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
