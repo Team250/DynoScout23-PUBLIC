@@ -92,7 +92,7 @@ namespace T250DynoScout_v2023
                     SeasonContext seasonframework = new SeasonContext();
                     seasonframework.Database.ExecuteSqlCommand("IF OBJECT_ID ('UpdatePreviews') IS NOT NULL DROP TABLE UpdatePreviews");
                     seasonframework.Database.ExecuteSqlCommand(Query);
-                    this.updatePreviewsTableAdapter6.Fill(this._2023seasondbDataSet6.UpdatePreviews);
+                    this.updatePreviewsTableAdapter.Fill(this._2023seasondbDataSet1.UpdatePreviews);
                 }
             }
             else
@@ -103,8 +103,8 @@ namespace T250DynoScout_v2023
 
         private void UpdateDatabase_Load(object sender, EventArgs e)
         {
-            // TODO: This line of code loads data into the '_2023seasondbDataSet224.UpdatePreviews' table. You can move, or remove it, as needed.
-            this.updatePreviewsTableAdapter6.Fill(this._2023seasondbDataSet6.UpdatePreviews);
+            // TODO: This line of code loads data into the '_2023seasondbDataSet1.UpdatePreviews' table. You can move, or remove it, as needed.
+            this.updatePreviewsTableAdapter.Fill(this._2023seasondbDataSet1.UpdatePreviews);
         }
 
         private void panel10_Paint(object sender, PaintEventArgs e)
@@ -743,6 +743,11 @@ namespace T250DynoScout_v2023
         }
 
         private void label35_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick_2(object sender, DataGridViewCellEventArgs e)
         {
 
         }

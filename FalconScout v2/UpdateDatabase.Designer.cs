@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateDatabase));
-            this.updatePreviewBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.comboCSStatus = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
@@ -50,11 +50,7 @@
             this.txtChargePts = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.updatePreviewsBindingSource6 = new System.Windows.Forms.BindingSource(this.components);
             this.label35 = new System.Windows.Forms.Label();
-            this.updatePreviewsBindingSource4 = new System.Windows.Forms.BindingSource(this.components);
-            this._2023seasondbDataSet6 = new T250DynoScout_v2023._2023seasondbDataSet6();
-            this.updatePreviewsBindingSource3 = new System.Windows.Forms.BindingSource(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -134,23 +130,53 @@
             this.panel12 = new System.Windows.Forms.Panel();
             this.btnFetchValues = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.dataSet1 = new T250DynoScout_v2023.DataSet1();
-            this.dataSet1BindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.updatePreviewBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this._2023seasondbDataSet1 = new T250DynoScout_v2023._2023seasondbDataSet1();
             this.updatePreviewsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.updatePreviewsBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.updatePreviewsBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
-            this.updatePreviewsBindingSource5 = new System.Windows.Forms.BindingSource(this.components);
-            this.updatePreviewsTableAdapter6 = new T250DynoScout_v2023._2023seasondbDataSet6TableAdapters.UpdatePreviewsTableAdapter();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewBindingSource)).BeginInit();
+            this.updatePreviewsTableAdapter = new T250DynoScout_v2023._2023seasondbDataSet1TableAdapters.UpdatePreviewsTableAdapter();
+            this.idDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.teamDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.matchDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.timeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recordTypeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.modeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mobilityDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.acqSub1DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.acqSub2DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.acqFCommDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.acqFLoadDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.acqFOtherDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.acqFOppsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delTopDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delMidDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delBotDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delFloorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delOutDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delCoopDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.delDropDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.coneDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cubeDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.noAttemptDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.triedAndFailedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.parkedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dockedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.engagedDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chargePartDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.engageTDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.engageFailDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.setupDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.autoPtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.gridPtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.chargePtsDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.scouterNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.scouterErrorDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.defenseDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.avoidanceDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.strategyDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.matcheventDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this._2023seasondbDataSet6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -167,18 +193,9 @@
             this.panel8.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1BindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewBindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this._2023seasondbDataSet1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource5)).BeginInit();
             this.SuspendLayout();
-            // 
-            // updatePreviewBindingSource
-            // 
-            this.updatePreviewBindingSource.DataMember = "UpdatePreview";
             // 
             // groupBox3
             // 
@@ -438,17 +455,55 @@
             // 
             this.dataGridView1.AutoGenerateColumns = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.DataSource = this.updatePreviewsBindingSource6;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.idDataGridViewTextBoxColumn,
+            this.teamDataGridViewTextBoxColumn,
+            this.matchDataGridViewTextBoxColumn,
+            this.timeDataGridViewTextBoxColumn,
+            this.recordTypeDataGridViewTextBoxColumn,
+            this.modeDataGridViewTextBoxColumn,
+            this.mobilityDataGridViewTextBoxColumn,
+            this.acqSub1DataGridViewTextBoxColumn,
+            this.acqSub2DataGridViewTextBoxColumn,
+            this.acqFCommDataGridViewTextBoxColumn,
+            this.acqFLoadDataGridViewTextBoxColumn,
+            this.acqFOtherDataGridViewTextBoxColumn,
+            this.acqFOppsDataGridViewTextBoxColumn,
+            this.delTopDataGridViewTextBoxColumn,
+            this.delMidDataGridViewTextBoxColumn,
+            this.delBotDataGridViewTextBoxColumn,
+            this.delFloorDataGridViewTextBoxColumn,
+            this.delOutDataGridViewTextBoxColumn,
+            this.delCoopDataGridViewTextBoxColumn,
+            this.delDropDataGridViewTextBoxColumn,
+            this.coneDataGridViewTextBoxColumn,
+            this.cubeDataGridViewTextBoxColumn,
+            this.noAttemptDataGridViewTextBoxColumn,
+            this.triedAndFailedDataGridViewTextBoxColumn,
+            this.parkedDataGridViewTextBoxColumn,
+            this.dockedDataGridViewTextBoxColumn,
+            this.engagedDataGridViewTextBoxColumn,
+            this.chargePartDataGridViewTextBoxColumn,
+            this.engageTDataGridViewTextBoxColumn,
+            this.engageFailDataGridViewTextBoxColumn,
+            this.setupDataGridViewTextBoxColumn,
+            this.autoPtsDataGridViewTextBoxColumn,
+            this.gridPtsDataGridViewTextBoxColumn,
+            this.chargePtsDataGridViewTextBoxColumn,
+            this.scouterNameDataGridViewTextBoxColumn,
+            this.scouterErrorDataGridViewTextBoxColumn,
+            this.defenseDataGridViewTextBoxColumn,
+            this.avoidanceDataGridViewTextBoxColumn,
+            this.strategyDataGridViewTextBoxColumn,
+            this.matcheventDataGridViewTextBoxColumn});
+            this.dataGridView1.DataSource = this.updatePreviewsBindingSource;
             this.dataGridView1.Location = new System.Drawing.Point(13, 8);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(1116, 244);
             this.dataGridView1.TabIndex = 11;
-            // 
-            // updatePreviewsBindingSource6
-            // 
-            this.updatePreviewsBindingSource6.DataMember = "UpdatePreviews";
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_2);
             // 
             // label35
             // 
@@ -463,16 +518,6 @@
             this.label35.TabIndex = 10;
             this.label35.Text = "Match Number";
             this.label35.Click += new System.EventHandler(this.label35_Click);
-            // 
-            // updatePreviewsBindingSource4
-            // 
-            this.updatePreviewsBindingSource4.DataMember = "UpdatePreviews";
-            this.updatePreviewsBindingSource4.DataSource = this._2023seasondbDataSet6;
-            // 
-            // _2023seasondbDataSet6
-            // 
-            this._2023seasondbDataSet6.DataSetName = "_2023seasondbDataSet6";
-            this._2023seasondbDataSet6.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // pictureBox1
             // 
@@ -1538,18 +1583,263 @@
             this.button6.Text = "Update Database";
             this.button6.UseVisualStyleBackColor = false;
             // 
-            // dataSet1
+            // _2023seasondbDataSet1
             // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            this._2023seasondbDataSet1.DataSetName = "_2023seasondbDataSet1";
+            this._2023seasondbDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
-            // dataSet1BindingSource
+            // updatePreviewsBindingSource
             // 
-            this.dataSet1BindingSource.DataSource = this.dataSet1;
-            this.dataSet1BindingSource.Position = 0;
+            this.updatePreviewsBindingSource.DataMember = "UpdatePreviews";
+            this.updatePreviewsBindingSource.DataSource = this._2023seasondbDataSet1;
             // 
-            // updatePreviewTableAdapter
-            
+            // updatePreviewsTableAdapter
+            // 
+            this.updatePreviewsTableAdapter.ClearBeforeFill = true;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            this.idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            this.idDataGridViewTextBoxColumn.HeaderText = "Id";
+            this.idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            this.idDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // teamDataGridViewTextBoxColumn
+            // 
+            this.teamDataGridViewTextBoxColumn.DataPropertyName = "Team";
+            this.teamDataGridViewTextBoxColumn.HeaderText = "Team";
+            this.teamDataGridViewTextBoxColumn.Name = "teamDataGridViewTextBoxColumn";
+            // 
+            // matchDataGridViewTextBoxColumn
+            // 
+            this.matchDataGridViewTextBoxColumn.DataPropertyName = "Match";
+            this.matchDataGridViewTextBoxColumn.HeaderText = "Match";
+            this.matchDataGridViewTextBoxColumn.Name = "matchDataGridViewTextBoxColumn";
+            // 
+            // timeDataGridViewTextBoxColumn
+            // 
+            this.timeDataGridViewTextBoxColumn.DataPropertyName = "Time";
+            this.timeDataGridViewTextBoxColumn.HeaderText = "Time";
+            this.timeDataGridViewTextBoxColumn.Name = "timeDataGridViewTextBoxColumn";
+            // 
+            // recordTypeDataGridViewTextBoxColumn
+            // 
+            this.recordTypeDataGridViewTextBoxColumn.DataPropertyName = "RecordType";
+            this.recordTypeDataGridViewTextBoxColumn.HeaderText = "RecordType";
+            this.recordTypeDataGridViewTextBoxColumn.Name = "recordTypeDataGridViewTextBoxColumn";
+            // 
+            // modeDataGridViewTextBoxColumn
+            // 
+            this.modeDataGridViewTextBoxColumn.DataPropertyName = "Mode";
+            this.modeDataGridViewTextBoxColumn.HeaderText = "Mode";
+            this.modeDataGridViewTextBoxColumn.Name = "modeDataGridViewTextBoxColumn";
+            // 
+            // mobilityDataGridViewTextBoxColumn
+            // 
+            this.mobilityDataGridViewTextBoxColumn.DataPropertyName = "Mobility";
+            this.mobilityDataGridViewTextBoxColumn.HeaderText = "Mobility";
+            this.mobilityDataGridViewTextBoxColumn.Name = "mobilityDataGridViewTextBoxColumn";
+            // 
+            // acqSub1DataGridViewTextBoxColumn
+            // 
+            this.acqSub1DataGridViewTextBoxColumn.DataPropertyName = "AcqSub1";
+            this.acqSub1DataGridViewTextBoxColumn.HeaderText = "AcqSub1";
+            this.acqSub1DataGridViewTextBoxColumn.Name = "acqSub1DataGridViewTextBoxColumn";
+            // 
+            // acqSub2DataGridViewTextBoxColumn
+            // 
+            this.acqSub2DataGridViewTextBoxColumn.DataPropertyName = "AcqSub2";
+            this.acqSub2DataGridViewTextBoxColumn.HeaderText = "AcqSub2";
+            this.acqSub2DataGridViewTextBoxColumn.Name = "acqSub2DataGridViewTextBoxColumn";
+            // 
+            // acqFCommDataGridViewTextBoxColumn
+            // 
+            this.acqFCommDataGridViewTextBoxColumn.DataPropertyName = "AcqFComm";
+            this.acqFCommDataGridViewTextBoxColumn.HeaderText = "AcqFComm";
+            this.acqFCommDataGridViewTextBoxColumn.Name = "acqFCommDataGridViewTextBoxColumn";
+            // 
+            // acqFLoadDataGridViewTextBoxColumn
+            // 
+            this.acqFLoadDataGridViewTextBoxColumn.DataPropertyName = "AcqFLoad";
+            this.acqFLoadDataGridViewTextBoxColumn.HeaderText = "AcqFLoad";
+            this.acqFLoadDataGridViewTextBoxColumn.Name = "acqFLoadDataGridViewTextBoxColumn";
+            // 
+            // acqFOtherDataGridViewTextBoxColumn
+            // 
+            this.acqFOtherDataGridViewTextBoxColumn.DataPropertyName = "AcqFOther";
+            this.acqFOtherDataGridViewTextBoxColumn.HeaderText = "AcqFOther";
+            this.acqFOtherDataGridViewTextBoxColumn.Name = "acqFOtherDataGridViewTextBoxColumn";
+            // 
+            // acqFOppsDataGridViewTextBoxColumn
+            // 
+            this.acqFOppsDataGridViewTextBoxColumn.DataPropertyName = "AcqFOpps";
+            this.acqFOppsDataGridViewTextBoxColumn.HeaderText = "AcqFOpps";
+            this.acqFOppsDataGridViewTextBoxColumn.Name = "acqFOppsDataGridViewTextBoxColumn";
+            // 
+            // delTopDataGridViewTextBoxColumn
+            // 
+            this.delTopDataGridViewTextBoxColumn.DataPropertyName = "DelTop";
+            this.delTopDataGridViewTextBoxColumn.HeaderText = "DelTop";
+            this.delTopDataGridViewTextBoxColumn.Name = "delTopDataGridViewTextBoxColumn";
+            // 
+            // delMidDataGridViewTextBoxColumn
+            // 
+            this.delMidDataGridViewTextBoxColumn.DataPropertyName = "DelMid";
+            this.delMidDataGridViewTextBoxColumn.HeaderText = "DelMid";
+            this.delMidDataGridViewTextBoxColumn.Name = "delMidDataGridViewTextBoxColumn";
+            // 
+            // delBotDataGridViewTextBoxColumn
+            // 
+            this.delBotDataGridViewTextBoxColumn.DataPropertyName = "DelBot";
+            this.delBotDataGridViewTextBoxColumn.HeaderText = "DelBot";
+            this.delBotDataGridViewTextBoxColumn.Name = "delBotDataGridViewTextBoxColumn";
+            // 
+            // delFloorDataGridViewTextBoxColumn
+            // 
+            this.delFloorDataGridViewTextBoxColumn.DataPropertyName = "DelFloor";
+            this.delFloorDataGridViewTextBoxColumn.HeaderText = "DelFloor";
+            this.delFloorDataGridViewTextBoxColumn.Name = "delFloorDataGridViewTextBoxColumn";
+            // 
+            // delOutDataGridViewTextBoxColumn
+            // 
+            this.delOutDataGridViewTextBoxColumn.DataPropertyName = "DelOut";
+            this.delOutDataGridViewTextBoxColumn.HeaderText = "DelOut";
+            this.delOutDataGridViewTextBoxColumn.Name = "delOutDataGridViewTextBoxColumn";
+            // 
+            // delCoopDataGridViewTextBoxColumn
+            // 
+            this.delCoopDataGridViewTextBoxColumn.DataPropertyName = "DelCoop";
+            this.delCoopDataGridViewTextBoxColumn.HeaderText = "DelCoop";
+            this.delCoopDataGridViewTextBoxColumn.Name = "delCoopDataGridViewTextBoxColumn";
+            // 
+            // delDropDataGridViewTextBoxColumn
+            // 
+            this.delDropDataGridViewTextBoxColumn.DataPropertyName = "DelDrop";
+            this.delDropDataGridViewTextBoxColumn.HeaderText = "DelDrop";
+            this.delDropDataGridViewTextBoxColumn.Name = "delDropDataGridViewTextBoxColumn";
+            // 
+            // coneDataGridViewTextBoxColumn
+            // 
+            this.coneDataGridViewTextBoxColumn.DataPropertyName = "Cone";
+            this.coneDataGridViewTextBoxColumn.HeaderText = "Cone";
+            this.coneDataGridViewTextBoxColumn.Name = "coneDataGridViewTextBoxColumn";
+            // 
+            // cubeDataGridViewTextBoxColumn
+            // 
+            this.cubeDataGridViewTextBoxColumn.DataPropertyName = "Cube";
+            this.cubeDataGridViewTextBoxColumn.HeaderText = "Cube";
+            this.cubeDataGridViewTextBoxColumn.Name = "cubeDataGridViewTextBoxColumn";
+            // 
+            // noAttemptDataGridViewTextBoxColumn
+            // 
+            this.noAttemptDataGridViewTextBoxColumn.DataPropertyName = "No_Attempt";
+            this.noAttemptDataGridViewTextBoxColumn.HeaderText = "No_Attempt";
+            this.noAttemptDataGridViewTextBoxColumn.Name = "noAttemptDataGridViewTextBoxColumn";
+            // 
+            // triedAndFailedDataGridViewTextBoxColumn
+            // 
+            this.triedAndFailedDataGridViewTextBoxColumn.DataPropertyName = "Tried_And_Failed";
+            this.triedAndFailedDataGridViewTextBoxColumn.HeaderText = "Tried_And_Failed";
+            this.triedAndFailedDataGridViewTextBoxColumn.Name = "triedAndFailedDataGridViewTextBoxColumn";
+            // 
+            // parkedDataGridViewTextBoxColumn
+            // 
+            this.parkedDataGridViewTextBoxColumn.DataPropertyName = "Parked";
+            this.parkedDataGridViewTextBoxColumn.HeaderText = "Parked";
+            this.parkedDataGridViewTextBoxColumn.Name = "parkedDataGridViewTextBoxColumn";
+            // 
+            // dockedDataGridViewTextBoxColumn
+            // 
+            this.dockedDataGridViewTextBoxColumn.DataPropertyName = "Docked";
+            this.dockedDataGridViewTextBoxColumn.HeaderText = "Docked";
+            this.dockedDataGridViewTextBoxColumn.Name = "dockedDataGridViewTextBoxColumn";
+            // 
+            // engagedDataGridViewTextBoxColumn
+            // 
+            this.engagedDataGridViewTextBoxColumn.DataPropertyName = "Engaged";
+            this.engagedDataGridViewTextBoxColumn.HeaderText = "Engaged";
+            this.engagedDataGridViewTextBoxColumn.Name = "engagedDataGridViewTextBoxColumn";
+            // 
+            // chargePartDataGridViewTextBoxColumn
+            // 
+            this.chargePartDataGridViewTextBoxColumn.DataPropertyName = "ChargePart";
+            this.chargePartDataGridViewTextBoxColumn.HeaderText = "ChargePart";
+            this.chargePartDataGridViewTextBoxColumn.Name = "chargePartDataGridViewTextBoxColumn";
+            // 
+            // engageTDataGridViewTextBoxColumn
+            // 
+            this.engageTDataGridViewTextBoxColumn.DataPropertyName = "EngageT";
+            this.engageTDataGridViewTextBoxColumn.HeaderText = "EngageT";
+            this.engageTDataGridViewTextBoxColumn.Name = "engageTDataGridViewTextBoxColumn";
+            // 
+            // engageFailDataGridViewTextBoxColumn
+            // 
+            this.engageFailDataGridViewTextBoxColumn.DataPropertyName = "EngageFail";
+            this.engageFailDataGridViewTextBoxColumn.HeaderText = "EngageFail";
+            this.engageFailDataGridViewTextBoxColumn.Name = "engageFailDataGridViewTextBoxColumn";
+            // 
+            // setupDataGridViewTextBoxColumn
+            // 
+            this.setupDataGridViewTextBoxColumn.DataPropertyName = "Setup";
+            this.setupDataGridViewTextBoxColumn.HeaderText = "Setup";
+            this.setupDataGridViewTextBoxColumn.Name = "setupDataGridViewTextBoxColumn";
+            // 
+            // autoPtsDataGridViewTextBoxColumn
+            // 
+            this.autoPtsDataGridViewTextBoxColumn.DataPropertyName = "AutoPts";
+            this.autoPtsDataGridViewTextBoxColumn.HeaderText = "AutoPts";
+            this.autoPtsDataGridViewTextBoxColumn.Name = "autoPtsDataGridViewTextBoxColumn";
+            // 
+            // gridPtsDataGridViewTextBoxColumn
+            // 
+            this.gridPtsDataGridViewTextBoxColumn.DataPropertyName = "GridPts";
+            this.gridPtsDataGridViewTextBoxColumn.HeaderText = "GridPts";
+            this.gridPtsDataGridViewTextBoxColumn.Name = "gridPtsDataGridViewTextBoxColumn";
+            // 
+            // chargePtsDataGridViewTextBoxColumn
+            // 
+            this.chargePtsDataGridViewTextBoxColumn.DataPropertyName = "ChargePts";
+            this.chargePtsDataGridViewTextBoxColumn.HeaderText = "ChargePts";
+            this.chargePtsDataGridViewTextBoxColumn.Name = "chargePtsDataGridViewTextBoxColumn";
+            // 
+            // scouterNameDataGridViewTextBoxColumn
+            // 
+            this.scouterNameDataGridViewTextBoxColumn.DataPropertyName = "ScouterName";
+            this.scouterNameDataGridViewTextBoxColumn.HeaderText = "ScouterName";
+            this.scouterNameDataGridViewTextBoxColumn.Name = "scouterNameDataGridViewTextBoxColumn";
+            // 
+            // scouterErrorDataGridViewTextBoxColumn
+            // 
+            this.scouterErrorDataGridViewTextBoxColumn.DataPropertyName = "ScouterError";
+            this.scouterErrorDataGridViewTextBoxColumn.HeaderText = "ScouterError";
+            this.scouterErrorDataGridViewTextBoxColumn.Name = "scouterErrorDataGridViewTextBoxColumn";
+            // 
+            // defenseDataGridViewTextBoxColumn
+            // 
+            this.defenseDataGridViewTextBoxColumn.DataPropertyName = "Defense";
+            this.defenseDataGridViewTextBoxColumn.HeaderText = "Defense";
+            this.defenseDataGridViewTextBoxColumn.Name = "defenseDataGridViewTextBoxColumn";
+            // 
+            // avoidanceDataGridViewTextBoxColumn
+            // 
+            this.avoidanceDataGridViewTextBoxColumn.DataPropertyName = "Avoidance";
+            this.avoidanceDataGridViewTextBoxColumn.HeaderText = "Avoidance";
+            this.avoidanceDataGridViewTextBoxColumn.Name = "avoidanceDataGridViewTextBoxColumn";
+            // 
+            // strategyDataGridViewTextBoxColumn
+            // 
+            this.strategyDataGridViewTextBoxColumn.DataPropertyName = "Strategy";
+            this.strategyDataGridViewTextBoxColumn.HeaderText = "Strategy";
+            this.strategyDataGridViewTextBoxColumn.Name = "strategyDataGridViewTextBoxColumn";
+            // 
+            // matcheventDataGridViewTextBoxColumn
+            // 
+            this.matcheventDataGridViewTextBoxColumn.DataPropertyName = "match_event";
+            this.matcheventDataGridViewTextBoxColumn.HeaderText = "match_event";
+            this.matcheventDataGridViewTextBoxColumn.Name = "matcheventDataGridViewTextBoxColumn";
+            // 
+            // UpdateDatabase
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
@@ -1566,17 +1856,12 @@
             this.Name = "UpdateDatabase";
             this.Text = "UpdateDatabase";
             this.Load += new System.EventHandler(this.UpdateDatabase_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewBindingSource)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this._2023seasondbDataSet6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
@@ -1599,13 +1884,8 @@
             this.panel8.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
             this.panel12.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1BindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewBindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this._2023seasondbDataSet1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.updatePreviewsBindingSource5)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1702,18 +1982,6 @@
         private System.Windows.Forms.TextBox txtAvoidance;
         private System.Windows.Forms.TextBox txtDefense;
         private System.Windows.Forms.TextBox txtMobility;
-        private System.Windows.Forms.BindingSource dataSet1BindingSource;
-        private DataSet1 dataSet1;
-
-        private System.Windows.Forms.BindingSource updatePreviewBindingSource;
-        private System.Windows.Forms.BindingSource updatePreviewBindingSource1;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource1;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource2;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource3;
-        private _2023seasondbDataSet6 _2023seasondbDataSet6;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource4;
-        private _2023seasondbDataSet6TableAdapters.UpdatePreviewsTableAdapter updatePreviewsTableAdapter4;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtFloor;
         private System.Windows.Forms.TextBox txtSetup;
@@ -1723,9 +1991,49 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.TextBox txtDrop;
         private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource5;
-        private _2023seasondbDataSet6TableAdapters.UpdatePreviewsTableAdapter updatePreviewsTableAdapter6;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.BindingSource updatePreviewsBindingSource6;
+        private _2023seasondbDataSet1 _2023seasondbDataSet1;
+        private System.Windows.Forms.BindingSource updatePreviewsBindingSource;
+        private _2023seasondbDataSet1TableAdapters.UpdatePreviewsTableAdapter updatePreviewsTableAdapter;
+        private System.Windows.Forms.DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn teamDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn matchDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn timeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn recordTypeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn modeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn mobilityDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn acqSub1DataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn acqSub2DataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn acqFCommDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn acqFLoadDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn acqFOtherDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn acqFOppsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delTopDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delMidDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delBotDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delFloorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delOutDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delCoopDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn delDropDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn coneDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn cubeDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn noAttemptDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn triedAndFailedDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn parkedDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dockedDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn engagedDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn chargePartDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn engageTDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn engageFailDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn setupDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn autoPtsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn gridPtsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn chargePtsDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn scouterNameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn scouterErrorDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn defenseDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn avoidanceDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn strategyDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn matcheventDataGridViewTextBoxColumn;
     }
 }
