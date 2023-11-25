@@ -1,4 +1,4 @@
-# DynoScout23-Private
+# DynoScout23-PUBLIC
 250DynoScout v2023
 Credit to Team 842 Falcon Robotics for the original scouting system.
 https://www.chiefdelphi.com/t/falcon-scouting-system-release/126808
@@ -16,10 +16,10 @@ Our task is to break down the game each year and provide our team with how we th
 To use the software, you need at least one Xbox Controller plugged into the laptop running the software, max of 6 controllers. Need SQL server installed onto the laptop for the code to connect to and Excel getting the data from the database.
 
 To get the data from The Blue Alliance you will need to create a Read Me API Key from https://www.thebluealliance.com/account. After that, to replace all locations Ctrl + F and look for *YOUR_API_KEY_HERE* in the entire solution.
-![Visual Studio Search](replaceexample.png)
+![Visual Studio Search](https://i.imgur.com/6yGt4FD.png)
 
 ## Usage
-![Interface](interface.png)
+![Interface](https://i.imgur.com/jguW83j.png)
 When the code starts up, the interface will be prompted.
 The user will need to load the events through the **Load** button at the top. This connects to The Blue Alliance API. After the code gets the events, the user will need to find the name of the event in the list of events, sorted by event code.
 
@@ -30,9 +30,9 @@ At the end of the match, when every scouter is ready to go to the next match. Th
 Incase of code exiting during an event, just re-open the code, load the event and matches, then just click the right arrow without checking the End Match box until you get to the next match.
 
 ## Controls
-![Auto Mode Controls](autocontrols.png)
-![Teleop Mode Controls](teleopcontrols.png)
-![Endgame Mode Controls](endgamecontrols.png)
+![Auto Mode Controls](https://i.imgur.com/7YQ1EGx.png)
+![Teleop Mode Controls](https://i.imgur.com/zzm1qLV.png)
+![Endgame Mode Controls](https://i.imgur.com/ZHcOxwh.png)
 
 ## Current Issues
 1. The Update Database button on the interface is hard coded to our laptop and will not work for anyone elses.
