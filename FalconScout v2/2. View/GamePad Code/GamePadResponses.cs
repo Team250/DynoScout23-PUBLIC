@@ -15,7 +15,7 @@ namespace T250DynoScout_v2023
             RobotState.Blue_Score = 0;
         }
 
-        RobotState[] rs;   //Objects for storing Match State
+        public static RobotState[] rs;   //Objects for storing Match State
 
         // #Rumble
 
@@ -36,6 +36,24 @@ namespace T250DynoScout_v2023
 
         Utilities utilities = new Utilities();
         public Stopwatch stopwatch = new Stopwatch();
+        public static Dictionary<int, int> controllerNumberMap = new Dictionary<int, int>
+        {
+            {0, 0},
+            {1, 1},
+            {2, 2},
+            {3, 3},
+            {4, 4},
+            {5, 5},
+        };
+        public static Dictionary<int, RobotState.SCOUTER_NAME> ScouterNameMap = new Dictionary<int, RobotState.SCOUTER_NAME>
+        {
+            {0, RobotState.SCOUTER_NAME.Select_Name},
+            {1, RobotState.SCOUTER_NAME.Select_Name},
+            {2, RobotState.SCOUTER_NAME.Select_Name},
+            {3, RobotState.SCOUTER_NAME.Select_Name},
+            {4, RobotState.SCOUTER_NAME.Select_Name},
+            {5, RobotState.SCOUTER_NAME.Select_Name},
+        };
 
         public TimeSpan Zero { get; private set; }
 
@@ -126,39 +144,38 @@ namespace T250DynoScout_v2023
         }
         public void readStick(GamePad[] gpArray, int controllerNumber)
         {
-
             GamePad gamepad = gpArray[controllerNumber];
             gamepad.Update();
 
-            if (gamepad.RTHRight_Press && !rs[controllerNumber].NoSho)
+            if (gamepad.RTHRight_Press && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
-                rs[controllerNumber].cycleEventName(RobotState.CYCLE_DIRECTION.Up);
+                rs[controllerNumberMap[controllerNumber]].cycleEventName(RobotState.CYCLE_DIRECTION.Up);
             }
-            if (gamepad.RTHLeft_Press && !rs[controllerNumber].NoSho)
+            if (gamepad.RTHLeft_Press && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
-                rs[controllerNumber].cycleEventName(RobotState.CYCLE_DIRECTION.Down);
+                rs[controllerNumberMap[controllerNumber]].cycleEventName(RobotState.CYCLE_DIRECTION.Down);
             }
 
             if (gamepad.R3_Press)
             {
-                if (rs[controllerNumber].match_event != RobotState.MATCHEVENT_NAME.Match_Event && !rs[controllerNumber].NoSho && rs[controllerNumber]._ScouterName != RobotState.SCOUTER_NAME.Select_Name)
+                if (rs[controllerNumberMap[controllerNumber]].match_event != RobotState.MATCHEVENT_NAME.Match_Event && !rs[controllerNumberMap[controllerNumber]].NoSho && rs[controllerNumberMap[controllerNumber]]._ScouterName != RobotState.SCOUTER_NAME.Select_Name)
                 {
 
-                    if (rs[controllerNumber].match_event == RobotState.MATCHEVENT_NAME.No_Show)
+                    if (rs[controllerNumberMap[controllerNumber]].match_event == RobotState.MATCHEVENT_NAME.No_Show)
                     {
-                        activity_record.match_event = (rs[controllerNumber].match_event.ToString())[0].ToString();
-                        rs[controllerNumber].NoSho = true;
+                        activity_record.match_event = (rs[controllerNumberMap[controllerNumber]].match_event.ToString())[0].ToString();
+                        rs[controllerNumberMap[controllerNumber]].NoSho = true;
                     }
                     else
                     {
-                        activity_record.match_event = (rs[controllerNumber].match_event.ToString())[0].ToString(); //If you crash here, you didn't load matches Boomer
+                        activity_record.match_event = (rs[controllerNumberMap[controllerNumber]].match_event.ToString())[0].ToString(); //If you crash here, you didn't load matches Boomer
                     }
-                    activity_record.Team = rs[controllerNumber].TeamName;
-                    activity_record.Match = rs[controllerNumber].Current_Match;
+                    activity_record.Team = rs[controllerNumberMap[controllerNumber]].TeamName;
+                    activity_record.Match = rs[controllerNumberMap[controllerNumber]].Current_Match;
                     activity_record.Time = DateTime.Now;
-                    activity_record.Mode = rs[controllerNumber].Current_Mode.ToString();
-                    activity_record.ScouterName = rs[controllerNumber].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString();
-                    //activity_record.ScouterNameAlt = rs[controllerNumber].getScouterNameALT(RobotState.SCOUTER_NAME_ALT.Select_AltName).ToString();
+                    activity_record.Mode = rs[controllerNumberMap[controllerNumber]].Current_Mode.ToString();
+                    activity_record.ScouterName = rs[controllerNumberMap[controllerNumber]].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString();
+                    //activity_record.ScouterNameAlt = rs[controllerNumberMap[controllerNumber]].getScouterNameALT(RobotState.SCOUTER_NAME_ALT.Select_AltName).ToString();
                     activity_record.RecordType = "Match_Event";
                     activity_record.Mobility = 0;
                     activity_record.AcqSub1 = 0;
@@ -197,14 +214,14 @@ namespace T250DynoScout_v2023
                     seasonframework.ActivitySet.Add(activity_record);
                     seasonframework.SaveChanges(); // If you crash here migration isn't working
 
-                    rs[controllerNumber].match_event = RobotState.MATCHEVENT_NAME.Match_Event;
+                    rs[controllerNumberMap[controllerNumber]].match_event = RobotState.MATCHEVENT_NAME.Match_Event;
 
                     //Reset Match Event
-                    rs[controllerNumber].match_event = 0;
+                    rs[controllerNumberMap[controllerNumber]].match_event = 0;
                 }
-                else if (rs[controllerNumber].match_event == RobotState.MATCHEVENT_NAME.Match_Event)
+                else if (rs[controllerNumberMap[controllerNumber]].match_event == RobotState.MATCHEVENT_NAME.Match_Event)
                 {
-                    rs[controllerNumber].ScouterError++;
+                    rs[controllerNumberMap[controllerNumber]].ScouterError++;
                 }
             }
 
@@ -212,26 +229,28 @@ namespace T250DynoScout_v2023
             // **************************************************************
             // *** Auto MODE ***
             // **************************************************************
-            if (rs[controllerNumber].Current_Mode == RobotState.ROBOT_MODE.Auto && !rs[controllerNumber].NoSho)
+            if (rs[controllerNumberMap[controllerNumber]].Current_Mode == RobotState.ROBOT_MODE.Auto && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
                 //2023 Scouter Names
                 if (gamepad.XButton_Down)
                 {
                     if (gamepad.LTHRight_Press)
                     {
-                        rs[controllerNumber].changeScouterName(RobotState.CYCLE_DIRECTION.Up);
+                        rs[controllerNumberMap[controllerNumber]].changeScouterName(RobotState.CYCLE_DIRECTION.Up);
+                        ScouterNameMap[controllerNumber] = rs[controllerNumber]._ScouterName;
                     }
                     if (gamepad.LTHLeft_Press)
                     {
-                        rs[controllerNumber].changeScouterName(RobotState.CYCLE_DIRECTION.Down);
+                        rs[controllerNumberMap[controllerNumber]].changeScouterName(RobotState.CYCLE_DIRECTION.Down);
+                        ScouterNameMap[controllerNumber] = rs[controllerNumber]._ScouterName;
                     }
                     //if (gamepad.LTHUp_Press)
                     //{
-                    //    rs[controllerNumber].changeScouterNameALT(RobotState.CYCLE_DIRECTION.Up);
+                    //    rs[controllerNumberMap[controllerNumber]].changeScouterNameALT(RobotState.CYCLE_DIRECTION.Up);
                     //}
                     //if (gamepad.LTHDown_Press)
                     //{
-                    //    rs[controllerNumber].changeScouterNameALT(RobotState.CYCLE_DIRECTION.Down);
+                    //    rs[controllerNumberMap[controllerNumber]].changeScouterNameALT(RobotState.CYCLE_DIRECTION.Down);
                     //}
                 }
 
@@ -240,348 +259,348 @@ namespace T250DynoScout_v2023
                 {
                     if (gamepad.XButton_Down)
                     {
-                        rs[controllerNumber].changeSetLoc(RobotState.CYCLE_DIRECTION.Up);
+                        rs[controllerNumberMap[controllerNumber]].changeSetLoc(RobotState.CYCLE_DIRECTION.Up);
                     }
                     else
                     {
-                        rs[controllerNumber].changeMob(RobotState.CYCLE_DIRECTION.Up);
+                        rs[controllerNumberMap[controllerNumber]].changeMob(RobotState.CYCLE_DIRECTION.Up);
                     }
                 }
 
                 //2023 Acquire Auto
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Comm;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Comm;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Other;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Other;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Neut;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Neut;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Load;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Load;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Coop Node Auto
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Outer Node Auto
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Floor Auto
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Drop;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Drop;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Drop;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Drop;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
 
                 //2023 Charging Auto
                 if (gamepad.LTHRight_Press && !gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeChargeStatus(RobotState.CYCLE_DIRECTION.Up);
-                    rs[controllerNumber].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Up);
-                    if (rs[controllerNumber].ChargeStatus == RobotState.CHARGESTATUS.Parked)
+                    rs[controllerNumberMap[controllerNumber]].changeChargeStatus(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Up);
+                    if (rs[controllerNumberMap[controllerNumber]].ChargeStatus == RobotState.CHARGESTATUS.Parked)
                     {
-                        rs[controllerNumber].changeChargeStatus(RobotState.CYCLE_DIRECTION.Up);
-                        rs[controllerNumber].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Up);
+                        rs[controllerNumberMap[controllerNumber]].changeChargeStatus(RobotState.CYCLE_DIRECTION.Up);
+                        rs[controllerNumberMap[controllerNumber]].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Up);
                     }
                 }
                 if (gamepad.LTHLeft_Press && !gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeChargeStatus(RobotState.CYCLE_DIRECTION.Down);
-                    rs[controllerNumber].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Down);
-                    if (rs[controllerNumber].ChargeStatus == RobotState.CHARGESTATUS.Parked)
+                    rs[controllerNumberMap[controllerNumber]].changeChargeStatus(RobotState.CYCLE_DIRECTION.Down);
+                    rs[controllerNumberMap[controllerNumber]].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Down);
+                    if (rs[controllerNumberMap[controllerNumber]].ChargeStatus == RobotState.CHARGESTATUS.Parked)
                     {
-                        rs[controllerNumber].changeChargeStatus(RobotState.CYCLE_DIRECTION.Down);
-                        rs[controllerNumber].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Down);
+                        rs[controllerNumberMap[controllerNumber]].changeChargeStatus(RobotState.CYCLE_DIRECTION.Down);
+                        rs[controllerNumberMap[controllerNumber]].changeChargeStatusAuto(RobotState.CYCLE_DIRECTION.Down);
                     }
                 }
 
                 //2023 Set Piece w/o Other Buttons Auto
                 if (gamepad.LeftButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Cube;
                 }
                 else if (gamepad.RightButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Cone;
                 }
                 else if (!gamepad.LeftButton_Down && !gamepad.RightButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Select;
                 }
 
                 //2023 Set Grid w/o Other Buttons Auto
                 if (gamepad.YButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Coop;
                 }
                 else if (gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Outer;
                 }
                 else if (!gamepad.YButton_Down && !gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Select;
                 }
 
                 //2023 Floor and Node lbls Auto
                 if (gamepad.YButton_Down || gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DNodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].DNodelbl = RobotState.NODELBL.Node;
                 }
                 else if (!gamepad.YButton_Down && !gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DNodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].DNodelbl = RobotState.NODELBL.Select;
                 }
                 if (gamepad.AButton_Down && !gamepad.LeftTrigger_Down)
                 {
-                    rs[controllerNumber].DFloorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].DFloorlbl = RobotState.FLOORLBL.Floor;
                 }
                 else if (!gamepad.AButton_Down && !gamepad.LeftTrigger_Down)
                 {
-                    rs[controllerNumber].DFloorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].DFloorlbl = RobotState.FLOORLBL.Select;
                 }
             }
 
@@ -589,358 +608,358 @@ namespace T250DynoScout_v2023
             // **************************************************************
             // *** Teleop MODE ***
             // **************************************************************
-            if (rs[controllerNumber].Current_Mode == RobotState.ROBOT_MODE.Teleop && !rs[controllerNumber].NoSho)
+            if (rs[controllerNumberMap[controllerNumber]].Current_Mode == RobotState.ROBOT_MODE.Teleop && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
                 //2023 Acquire Teleop
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Comm;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Comm;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Other;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Other;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Neut;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Neut;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Load;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Load;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.XButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Shelf;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Shelf;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.XButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Chute;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Chute;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.XButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Opp;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Opp;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Coop Node Teleop
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Outer Node Teleop
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Floor Teleop
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Drop;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Drop;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Drop;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Drop;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
 
                 //2023 Engage Timer Reset Teleop
                 if (gamepad.StartButton_Press)
                 {
-                    rs[controllerNumber].EngageTime_StopWatch_running = false;
-                    rs[controllerNumber].EngageTime_StopWatch.Reset();
-                    rs[controllerNumber].EngageTime = rs[controllerNumber].EngageTime_StopWatch.Elapsed;
+                    rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch_running = false;
+                    rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Reset();
+                    rs[controllerNumberMap[controllerNumber]].EngageTime = rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Elapsed;
                 }
 
                 //2023 Set Piece w/o Other Buttons Teleop
                 if (gamepad.LeftButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Cube;
                 }
                 else if (gamepad.RightButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Cone;
                 }
                 else if (!gamepad.LeftButton_Down && !gamepad.RightButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Select;
                 }
 
                 //2023 Set Grid w/o Other Buttons Teleop
                 if (gamepad.YButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Coop;
                 }
                 else if (gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Outer;
                 }
                 else if (!gamepad.YButton_Down && !gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Select;
                 }
 
                 //2023 Floor and Node lbls Telop
                 if (gamepad.YButton_Down || gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DNodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].DNodelbl = RobotState.NODELBL.Node;
                 }
                 else if (!gamepad.YButton_Down && !gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DNodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].DNodelbl = RobotState.NODELBL.Select;
                 }
                 if (gamepad.AButton_Down && !gamepad.LeftTrigger_Down)
                 {
-                    rs[controllerNumber].DFloorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].DFloorlbl = RobotState.FLOORLBL.Floor;
                 }
                 else if (!gamepad.AButton_Down && !gamepad.LeftTrigger_Down)
                 {
-                    rs[controllerNumber].DFloorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].DFloorlbl = RobotState.FLOORLBL.Select;
                 }
             }
 
@@ -948,386 +967,386 @@ namespace T250DynoScout_v2023
             // **************************************************************
             // *** ENDGAME MODE ***
             // **************************************************************
-            if (rs[controllerNumber].Current_Mode == RobotState.ROBOT_MODE.Endgame && !rs[controllerNumber].NoSho)
+            if (rs[controllerNumberMap[controllerNumber]].Current_Mode == RobotState.ROBOT_MODE.Endgame && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
                 //2023 Acquire Endgame
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Comm;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Comm;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Other;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Other;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Neut;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Neut;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftTrigger_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Acq = RobotState.ACQ.Floor_Load;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Floor_Load;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Coop Node Endgame
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.YButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.YButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Coop;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Outer Node Endgame
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.LeftButton_Down && gamepad.BButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Top;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Top;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Bot;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Bot;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Outer;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Mid;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Mid;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
                 if (gamepad.RightButton_Down && gamepad.BButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Node;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
                 }
 
                 //2023 Deliver Floor Endgame
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.LeftButton_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cube;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Drop;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Drop;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Success;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Success;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
                 if (gamepad.RightButton_Down && gamepad.AButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].Piece = RobotState.PIECE.Cone;
-                    rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Drop;
-                    rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                    rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                    rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                    rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                    rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Drop;
+                    rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                    rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                    rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Floor;
                 }
 
                 //2023 Teams on Charging Station Endgame
                 if (gamepad.XButton_Down && gamepad.StartButton_Press)
                 {
-                    rs[controllerNumber].changeCSTeams(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeCSTeams(RobotState.CYCLE_DIRECTION.Up);
                 }
 
                 //2023 End Status and Fail Endgame
                 if (gamepad.LTHRight_Press && !gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeChargeStatus(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeChargeStatus(RobotState.CYCLE_DIRECTION.Up);
                 }
                 if (gamepad.LTHLeft_Press && !gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeChargeStatus(RobotState.CYCLE_DIRECTION.Down);
+                    rs[controllerNumberMap[controllerNumber]].changeChargeStatus(RobotState.CYCLE_DIRECTION.Down);
                 }
                 if (gamepad.LTHUp_Press && !gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeFailReason(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeFailReason(RobotState.CYCLE_DIRECTION.Up);
                 }
                 if (gamepad.LTHDown_Press && !gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeFailReason(RobotState.CYCLE_DIRECTION.Down);
+                    rs[controllerNumberMap[controllerNumber]].changeFailReason(RobotState.CYCLE_DIRECTION.Down);
                 }
 
                 //2023 Strategy 
                 if (gamepad.LTHRight_Press && gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeStrategy(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeStrategy(RobotState.CYCLE_DIRECTION.Up);
                 }
                 if (gamepad.LTHLeft_Press && gamepad.XButton_Down)
                 {
-                    rs[controllerNumber].changeStrategy(RobotState.CYCLE_DIRECTION.Down);
+                    rs[controllerNumberMap[controllerNumber]].changeStrategy(RobotState.CYCLE_DIRECTION.Down);
                 }
 
                 //2023 Def and Avo Ratings
                 if (gamepad.XButton_Down && gamepad.DpadRight_Press)
                 {
-                    rs[controllerNumber].changeAvoRate(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeAvoRate(RobotState.CYCLE_DIRECTION.Up);
                 }
                 if (gamepad.XButton_Down && gamepad.DpadLeft_Press)
                 {
-                    rs[controllerNumber].changeAvoRate(RobotState.CYCLE_DIRECTION.Down);
+                    rs[controllerNumberMap[controllerNumber]].changeAvoRate(RobotState.CYCLE_DIRECTION.Down);
                 }
                 if (gamepad.XButton_Down && gamepad.DpadUp_Press)
                 {
-                    rs[controllerNumber].changeDefRate(RobotState.CYCLE_DIRECTION.Up);
+                    rs[controllerNumberMap[controllerNumber]].changeDefRate(RobotState.CYCLE_DIRECTION.Up);
                 }
                 if (gamepad.XButton_Down && gamepad.DpadDown_Press)
                 {
-                    rs[controllerNumber].changeDefRate(RobotState.CYCLE_DIRECTION.Down);
+                    rs[controllerNumberMap[controllerNumber]].changeDefRate(RobotState.CYCLE_DIRECTION.Down);
                 }
 
                 //2023 Engage Timer
-                if (gamepad.StartButton_Press && !gamepad.XButton_Down && rs[controllerNumber].EngageTime_StopWatch_running == true)
+                if (gamepad.StartButton_Press && !gamepad.XButton_Down && rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch_running == true)
                 {
-                    rs[controllerNumber].EngageTime_StopWatch.Stop();
-                    rs[controllerNumber].EngageTime = rs[controllerNumber].EngageTime_StopWatch.Elapsed;
-                    rs[controllerNumber].EngageTime_StopWatch_running = false;
+                    rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Stop();
+                    rs[controllerNumberMap[controllerNumber]].EngageTime = rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Elapsed;
+                    rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch_running = false;
                 }
-                else if (gamepad.StartButton_Press && !gamepad.XButton_Down && rs[controllerNumber].EngageTime_StopWatch_running == false)
+                else if (gamepad.StartButton_Press && !gamepad.XButton_Down && rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch_running == false)
                 {
-                    rs[controllerNumber].EngageTime_StopWatch.Start();
-                    rs[controllerNumber].EngageTime = rs[controllerNumber].EngageTime_StopWatch.Elapsed;
-                    rs[controllerNumber].EngageTime_StopWatch_running = true;
+                    rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Start();
+                    rs[controllerNumberMap[controllerNumber]].EngageTime = rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Elapsed;
+                    rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch_running = true;
                 }
 
                 //2023 Set Piece w/o Other Buttons Endgame
                 if (gamepad.LeftButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Cube;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Cube;
                 }
                 else if (gamepad.RightButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Cone;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Cone;
                 }
                 else if (!gamepad.LeftButton_Down && !gamepad.RightButton_Down)
                 {
-                    rs[controllerNumber].DPiece = RobotState.PIECE.Select;
+                    rs[controllerNumberMap[controllerNumber]].DPiece = RobotState.PIECE.Select;
                 }
 
                 //2023 Set Grid w/o Other Buttons Endgame
                 if (gamepad.YButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Coop;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Coop;
                 }
                 else if (gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Outer;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Outer;
                 }
                 else if (!gamepad.YButton_Down && !gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DDelGrid = RobotState.DELGRID.Select;
+                    rs[controllerNumberMap[controllerNumber]].DDelGrid = RobotState.DELGRID.Select;
                 }
 
                 //2023 Floor and Node lbls Endgame
                 if (gamepad.YButton_Down || gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DNodelbl = RobotState.NODELBL.Node;
+                    rs[controllerNumberMap[controllerNumber]].DNodelbl = RobotState.NODELBL.Node;
                 }
                 else if (!gamepad.YButton_Down && !gamepad.BButton_Down)
                 {
-                    rs[controllerNumber].DNodelbl = RobotState.NODELBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].DNodelbl = RobotState.NODELBL.Select;
                 }
                 if (gamepad.AButton_Down && !gamepad.LeftTrigger_Down)
                 {
-                    rs[controllerNumber].DFloorlbl = RobotState.FLOORLBL.Floor;
+                    rs[controllerNumberMap[controllerNumber]].DFloorlbl = RobotState.FLOORLBL.Floor;
                 }
                 else if (!gamepad.AButton_Down && !gamepad.LeftTrigger_Down)
                 {
-                    rs[controllerNumber].DFloorlbl = RobotState.FLOORLBL.Select;
+                    rs[controllerNumberMap[controllerNumber]].DFloorlbl = RobotState.FLOORLBL.Select;
                 }
             }
 
@@ -1336,23 +1355,23 @@ namespace T250DynoScout_v2023
             // **************************************************************
             // ***  TRANSACT TO DATABASE  ***
             // **************************************************************
-            if (rs[controllerNumber]._ScouterName != RobotState.SCOUTER_NAME.Select_Name)
+            if (rs[controllerNumberMap[controllerNumber]]._ScouterName != RobotState.SCOUTER_NAME.Select_Name)
             {
-                if (rs[controllerNumber].Acq != RobotState.ACQ.Select || rs[controllerNumber].DelRow != RobotState.DELROW.Select || rs[controllerNumber].DelFloor != RobotState.DELFLOOR.Select)
+                if (rs[controllerNumberMap[controllerNumber]].Acq != RobotState.ACQ.Select || rs[controllerNumberMap[controllerNumber]].DelRow != RobotState.DELROW.Select || rs[controllerNumberMap[controllerNumber]].DelFloor != RobotState.DELFLOOR.Select)
                 {
-                    rs[controllerNumber].TransactionCheck = true;
+                    rs[controllerNumberMap[controllerNumber]].TransactionCheck = true;
                 }
             }
 
             //2023 EndAuto End of Autonomous transaction
-            if (rs[controllerNumber].AUTO && gamepad.BackButton_Press && !rs[controllerNumber].NoSho && rs[controllerNumber]._ScouterName != RobotState.SCOUTER_NAME.Select_Name)
+            if (rs[controllerNumberMap[controllerNumber]].AUTO && gamepad.BackButton_Press && !rs[controllerNumberMap[controllerNumber]].NoSho && rs[controllerNumberMap[controllerNumber]]._ScouterName != RobotState.SCOUTER_NAME.Select_Name)
             {
-                activity_record.Team = rs[controllerNumber].TeamName;
-                activity_record.Match = rs[controllerNumber].Current_Match;
+                activity_record.Team = rs[controllerNumberMap[controllerNumber]].TeamName;
+                activity_record.Match = rs[controllerNumberMap[controllerNumber]].Current_Match;
                 activity_record.Time = DateTime.Now;
-                activity_record.Mode = rs[controllerNumber].Current_Mode.ToString();
-                activity_record.ScouterName = rs[controllerNumber].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString();
-                //activity_record.ScouterNameAlt = rs[controllerNumber].getScouterNameALT(RobotState.SCOUTER_NAME_ALT.Select_AltName).ToString();
+                activity_record.Mode = rs[controllerNumberMap[controllerNumber]].Current_Mode.ToString();
+                activity_record.ScouterName = rs[controllerNumberMap[controllerNumber]].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString();
+                //activity_record.ScouterNameAlt = rs[controllerNumberMap[controllerNumber]].getScouterNameALT(RobotState.SCOUTER_NAME_ALT.Select_AltName).ToString();
                 activity_record.RecordType = "EndAuto";
 
                 activity_record.match_event = "-";
@@ -1360,7 +1379,7 @@ namespace T250DynoScout_v2023
                 activity_record.Defense = 0;
                 activity_record.Avoidance = 0;
 
-                activity_record.ScouterError = rs[controllerNumber].ScouterError;
+                activity_record.ScouterError = rs[controllerNumberMap[controllerNumber]].ScouterError;
 
                 activity_record.AcqSub1 = 0;
                 activity_record.AcqSub2 = 0;
@@ -1385,40 +1404,40 @@ namespace T250DynoScout_v2023
                 activity_record.Strategy = "-";
 
                 //2023 Scoring
-                if (rs[controllerNumber].Mob == RobotState.MOB.Y)
+                if (rs[controllerNumberMap[controllerNumber]].Mob == RobotState.MOB.Y)
                 {
-                    rs[controllerNumber].APoints = rs[controllerNumber].APoints + 3;
+                    rs[controllerNumberMap[controllerNumber]].APoints = rs[controllerNumberMap[controllerNumber]].APoints + 3;
                     activity_record.Mobility = 1;
                 }
-                else if (rs[controllerNumber].Mob == RobotState.MOB.N)
+                else if (rs[controllerNumberMap[controllerNumber]].Mob == RobotState.MOB.N)
                 {
                     activity_record.Mobility = 0;
                 }
 
-                if (rs[controllerNumber].ChargeStatus == RobotState.CHARGESTATUS.Engaged)
+                if (rs[controllerNumberMap[controllerNumber]].ChargeStatus == RobotState.CHARGESTATUS.Engaged)
                 {
-                    rs[controllerNumber].CPoints = rs[controllerNumber].CPoints + 12;
+                    rs[controllerNumberMap[controllerNumber]].CPoints = rs[controllerNumberMap[controllerNumber]].CPoints + 12;
                     activity_record.Engaged = 1;
                     activity_record.Docked = 0;
                     activity_record.Tried_And_Failed = 0;
                     activity_record.No_Attempt = 0;
                 }
-                else if (rs[controllerNumber].ChargeStatus == RobotState.CHARGESTATUS.Docked)
+                else if (rs[controllerNumberMap[controllerNumber]].ChargeStatus == RobotState.CHARGESTATUS.Docked)
                 {
-                    rs[controllerNumber].CPoints = rs[controllerNumber].CPoints + 8;
+                    rs[controllerNumberMap[controllerNumber]].CPoints = rs[controllerNumberMap[controllerNumber]].CPoints + 8;
                     activity_record.Engaged = 0;
                     activity_record.Docked = 1;
                     activity_record.Tried_And_Failed = 0;
                     activity_record.No_Attempt = 0;
                 }
-                else if (rs[controllerNumber].ChargeStatus == RobotState.CHARGESTATUS.No_Attempt)
+                else if (rs[controllerNumberMap[controllerNumber]].ChargeStatus == RobotState.CHARGESTATUS.No_Attempt)
                 {
                     activity_record.Engaged = 0;
                     activity_record.Docked = 0;
                     activity_record.Tried_And_Failed = 0;
                     activity_record.No_Attempt = 1;
                 }
-                else if (rs[controllerNumber].ChargeStatus == RobotState.CHARGESTATUS.Tried_And_Failed)
+                else if (rs[controllerNumberMap[controllerNumber]].ChargeStatus == RobotState.CHARGESTATUS.Tried_And_Failed)
                 {
                     activity_record.Engaged = 0;
                     activity_record.Docked = 0;
@@ -1431,49 +1450,49 @@ namespace T250DynoScout_v2023
                     activity_record.Docked = 0;
                     activity_record.Tried_And_Failed = 0;
                     activity_record.No_Attempt = 0;
-                    rs[controllerNumber].ScouterError++;
+                    rs[controllerNumberMap[controllerNumber]].ScouterError++;
                 }
 
-                if (rs[controllerNumber].SetLoc == RobotState.SETLOC.Q_)
+                if (rs[controllerNumberMap[controllerNumber]].SetLoc == RobotState.SETLOC.Q_)
                 {
                     activity_record.Setup = 0;
-                    rs[controllerNumber].ScouterError++;
+                    rs[controllerNumberMap[controllerNumber]].ScouterError++;
                 }
-                else if (rs[controllerNumber].SetLoc == RobotState.SETLOC.Q1)
+                else if (rs[controllerNumberMap[controllerNumber]].SetLoc == RobotState.SETLOC.Q1)
                 {
                     activity_record.Setup = 1;
                 }
-                else if (rs[controllerNumber].SetLoc == RobotState.SETLOC.Q2)
+                else if (rs[controllerNumberMap[controllerNumber]].SetLoc == RobotState.SETLOC.Q2)
                 {
                     activity_record.Setup = 2;
                 }
-                else if (rs[controllerNumber].SetLoc == RobotState.SETLOC.Q3)
+                else if (rs[controllerNumberMap[controllerNumber]].SetLoc == RobotState.SETLOC.Q3)
                 {
                     activity_record.Setup = 3;
                 }
-                else if (rs[controllerNumber].SetLoc == RobotState.SETLOC.Q4)
+                else if (rs[controllerNumberMap[controllerNumber]].SetLoc == RobotState.SETLOC.Q4)
                 {
                     activity_record.Setup = 4;
                 }
 
-                rs[controllerNumber].AUTO = false;
+                rs[controllerNumberMap[controllerNumber]].AUTO = false;
 
                 //Save Record to the database
                 seasonframework.ActivitySet.Add(activity_record);
                 seasonframework.SaveChanges();
 
                 //Reset Values
-                rs[controllerNumber].Mob = RobotState.MOB.N;
-                rs[controllerNumber].ChargeStatus = RobotState.CHARGESTATUS.Select;
+                rs[controllerNumberMap[controllerNumber]].Mob = RobotState.MOB.N;
+                rs[controllerNumberMap[controllerNumber]].ChargeStatus = RobotState.CHARGESTATUS.Select;
             }
-            else if (gamepad.RightTrigger_Press && !rs[controllerNumber].NoSho && rs[controllerNumber].TransactionCheck == true)
+            else if (gamepad.RightTrigger_Press && !rs[controllerNumberMap[controllerNumber]].NoSho && rs[controllerNumberMap[controllerNumber]].TransactionCheck == true)
             {
-                activity_record.Team = rs[controllerNumber].TeamName;
-                activity_record.Match = rs[controllerNumber].Current_Match;
+                activity_record.Team = rs[controllerNumberMap[controllerNumber]].TeamName;
+                activity_record.Match = rs[controllerNumberMap[controllerNumber]].Current_Match;
                 activity_record.Time = DateTime.Now;
-                activity_record.Mode = rs[controllerNumber].Current_Mode.ToString();
-                activity_record.ScouterName = rs[controllerNumber].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString();
-                //activity_record.ScouterNameAlt = rs[controllerNumber].getScouterNameALT(RobotState.SCOUTER_NAME_ALT.Select_AltName).ToString();
+                activity_record.Mode = rs[controllerNumberMap[controllerNumber]].Current_Mode.ToString();
+                activity_record.ScouterName = rs[controllerNumberMap[controllerNumber]].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString();
+                //activity_record.ScouterNameAlt = rs[controllerNumberMap[controllerNumber]].getScouterNameALT(RobotState.SCOUTER_NAME_ALT.Select_AltName).ToString();
                 activity_record.RecordType = "Activities";
 
                 activity_record.match_event = "-";
@@ -1497,197 +1516,197 @@ namespace T250DynoScout_v2023
 
                 activity_record.ScouterError = 0;
 
-                if (rs[controllerNumber].AUTO == true)
+                if (rs[controllerNumberMap[controllerNumber]].AUTO == true)
                 {
-                    if (rs[controllerNumber].DelRow == RobotState.DELROW.Bot)
+                    if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Bot)
                     {
-                        rs[controllerNumber].APoints = rs[controllerNumber].APoints + 3;
-                        rs[controllerNumber].GPoints = rs[controllerNumber].GPoints + 3;
+                        rs[controllerNumberMap[controllerNumber]].APoints = rs[controllerNumberMap[controllerNumber]].APoints + 3;
+                        rs[controllerNumberMap[controllerNumber]].GPoints = rs[controllerNumberMap[controllerNumber]].GPoints + 3;
                         activity_record.DelTop = 0;
                         activity_record.DelMid = 0;
                         activity_record.DelBot = 1;
-                        if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                        if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                         {
                             activity_record.Cone = 1;
                             activity_record.Cube = 0;
-                            rs[controllerNumber].TotDelConeHyb = rs[controllerNumber].TotDelConeHyb + 1;
-                            rs[controllerNumber].TotAutoCone = rs[controllerNumber].TotAutoCone + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelConeHyb = rs[controllerNumberMap[controllerNumber]].TotDelConeHyb + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotAutoCone = rs[controllerNumberMap[controllerNumber]].TotAutoCone + 1;
                         }
-                        else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                        else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                         {
                             activity_record.Cone = 0;
                             activity_record.Cube = 1;
-                            rs[controllerNumber].TotDelCubeHyb = rs[controllerNumber].TotDelCubeHyb + 1;
-                            rs[controllerNumber].TotAutoCube = rs[controllerNumber].TotAutoCube + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelCubeHyb = rs[controllerNumberMap[controllerNumber]].TotDelCubeHyb + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotAutoCube = rs[controllerNumberMap[controllerNumber]].TotAutoCube + 1;
                         }
                     }
-                    else if (rs[controllerNumber].DelRow == RobotState.DELROW.Mid)
+                    else if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Mid)
                     {
-                        rs[controllerNumber].APoints = rs[controllerNumber].APoints + 4;
-                        rs[controllerNumber].GPoints = rs[controllerNumber].GPoints + 4;
+                        rs[controllerNumberMap[controllerNumber]].APoints = rs[controllerNumberMap[controllerNumber]].APoints + 4;
+                        rs[controllerNumberMap[controllerNumber]].GPoints = rs[controllerNumberMap[controllerNumber]].GPoints + 4;
                         activity_record.DelTop = 0;
                         activity_record.DelMid = 1;
                         activity_record.DelBot = 0;
-                        if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                        if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                         {
                             activity_record.Cone = 1;
                             activity_record.Cube = 0;
-                            rs[controllerNumber].TotDelConeMid = rs[controllerNumber].TotDelConeMid + 1;
-                            rs[controllerNumber].TotAutoCone = rs[controllerNumber].TotAutoCone + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelConeMid = rs[controllerNumberMap[controllerNumber]].TotDelConeMid + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotAutoCone = rs[controllerNumberMap[controllerNumber]].TotAutoCone + 1;
                         }
-                        else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                        else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                         {
                             activity_record.Cone = 0;
                             activity_record.Cube = 1;
-                            rs[controllerNumber].TotDelCubeMid = rs[controllerNumber].TotDelCubeMid + 1;
-                            rs[controllerNumber].TotAutoCube = rs[controllerNumber].TotAutoCube + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelCubeMid = rs[controllerNumberMap[controllerNumber]].TotDelCubeMid + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotAutoCube = rs[controllerNumberMap[controllerNumber]].TotAutoCube + 1;
                         }
                     }
-                    else if (rs[controllerNumber].DelRow == RobotState.DELROW.Top)
+                    else if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Top)
                     {
-                        rs[controllerNumber].APoints = rs[controllerNumber].APoints + 6;
-                        rs[controllerNumber].GPoints = rs[controllerNumber].GPoints + 6;
+                        rs[controllerNumberMap[controllerNumber]].APoints = rs[controllerNumberMap[controllerNumber]].APoints + 6;
+                        rs[controllerNumberMap[controllerNumber]].GPoints = rs[controllerNumberMap[controllerNumber]].GPoints + 6;
                         activity_record.DelTop = 1;
                         activity_record.DelMid = 0;
                         activity_record.DelBot = 0;
-                        if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                        if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                         {
                             activity_record.Cone = 1;
                             activity_record.Cube = 0;
-                            rs[controllerNumber].TotDelConeTop = rs[controllerNumber].TotDelConeTop + 1;
-                            rs[controllerNumber].TotAutoCone = rs[controllerNumber].TotAutoCone + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelConeTop = rs[controllerNumberMap[controllerNumber]].TotDelConeTop + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotAutoCone = rs[controllerNumberMap[controllerNumber]].TotAutoCone + 1;
                         }
-                        else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                        else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                         {
                             activity_record.Cone = 0;
                             activity_record.Cube = 1;
-                            rs[controllerNumber].TotDelCubeTop = rs[controllerNumber].TotDelCubeTop + 1;
-                            rs[controllerNumber].TotAutoCube = rs[controllerNumber].TotAutoCube + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelCubeTop = rs[controllerNumberMap[controllerNumber]].TotDelCubeTop + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotAutoCube = rs[controllerNumberMap[controllerNumber]].TotAutoCube + 1;
                         }
                     }
                 }
-                else if (rs[controllerNumber].AUTO == false)
+                else if (rs[controllerNumberMap[controllerNumber]].AUTO == false)
                 {
-                    if (rs[controllerNumber].DelRow == RobotState.DELROW.Bot)
+                    if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Bot)
                     {
-                        rs[controllerNumber].GPoints = rs[controllerNumber].GPoints + 2;
+                        rs[controllerNumberMap[controllerNumber]].GPoints = rs[controllerNumberMap[controllerNumber]].GPoints + 2;
                         activity_record.DelTop = 0;
                         activity_record.DelMid = 0;
                         activity_record.DelBot = 1;
-                        if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                        if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                         {
                             activity_record.Cone = 1;
                             activity_record.Cube = 0;
-                            rs[controllerNumber].TotDelConeHyb = rs[controllerNumber].TotDelConeHyb + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelConeHyb = rs[controllerNumberMap[controllerNumber]].TotDelConeHyb + 1;
                         }
-                        else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                        else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                         {
                             activity_record.Cone = 0;
                             activity_record.Cube = 1;
-                            rs[controllerNumber].TotDelCubeHyb = rs[controllerNumber].TotDelCubeHyb + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelCubeHyb = rs[controllerNumberMap[controllerNumber]].TotDelCubeHyb + 1;
                         }
                     }
-                    else if (rs[controllerNumber].DelRow == RobotState.DELROW.Mid)
+                    else if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Mid)
                     {
-                        rs[controllerNumber].GPoints = rs[controllerNumber].GPoints + 3;
+                        rs[controllerNumberMap[controllerNumber]].GPoints = rs[controllerNumberMap[controllerNumber]].GPoints + 3;
                         activity_record.DelTop = 0;
                         activity_record.DelMid = 1;
                         activity_record.DelBot = 0;
-                        if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                        if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                         {
                             activity_record.Cone = 1;
                             activity_record.Cube = 0;
-                            rs[controllerNumber].TotDelConeMid = rs[controllerNumber].TotDelConeMid + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelConeMid = rs[controllerNumberMap[controllerNumber]].TotDelConeMid + 1;
                         }
-                        else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                        else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                         {
                             activity_record.Cone = 0;
                             activity_record.Cube = 1;
-                            rs[controllerNumber].TotDelCubeMid = rs[controllerNumber].TotDelCubeMid + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelCubeMid = rs[controllerNumberMap[controllerNumber]].TotDelCubeMid + 1;
                         }
                     }
-                    else if (rs[controllerNumber].DelRow == RobotState.DELROW.Top)
+                    else if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Top)
                     {
-                        rs[controllerNumber].GPoints = rs[controllerNumber].GPoints + 5;
+                        rs[controllerNumberMap[controllerNumber]].GPoints = rs[controllerNumberMap[controllerNumber]].GPoints + 5;
                         activity_record.DelTop = 1;
                         activity_record.DelMid = 0;
                         activity_record.DelBot = 0;
-                        if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                        if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                         {
                             activity_record.Cone = 1;
                             activity_record.Cube = 0;
-                            rs[controllerNumber].TotDelConeTop = rs[controllerNumber].TotDelConeTop + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelConeTop = rs[controllerNumberMap[controllerNumber]].TotDelConeTop + 1;
                         }
-                        else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                        else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                         {
                             activity_record.Cone = 0;
                             activity_record.Cube = 1;
-                            rs[controllerNumber].TotDelCubeTop = rs[controllerNumber].TotDelCubeTop + 1;
+                            rs[controllerNumberMap[controllerNumber]].TotDelCubeTop = rs[controllerNumberMap[controllerNumber]].TotDelCubeTop + 1;
                         }
                     }
                 }
 
-                if (rs[controllerNumber].DelGrid == RobotState.DELGRID.Outer)
+                if (rs[controllerNumberMap[controllerNumber]].DelGrid == RobotState.DELGRID.Outer)
                 {
                     activity_record.DelOut = 1;
                     activity_record.DelCoop = 0;
-                    rs[controllerNumber].TotDelOut = rs[controllerNumber].TotDelOut + 1;
+                    rs[controllerNumberMap[controllerNumber]].TotDelOut = rs[controllerNumberMap[controllerNumber]].TotDelOut + 1;
                 }
-                else if (rs[controllerNumber].DelGrid == RobotState.DELGRID.Coop)
+                else if (rs[controllerNumberMap[controllerNumber]].DelGrid == RobotState.DELGRID.Coop)
                 {
                     activity_record.DelOut = 0;
                     activity_record.DelCoop = 1;
-                    rs[controllerNumber].TotDelCoop = rs[controllerNumber].TotDelCoop + 1;
+                    rs[controllerNumberMap[controllerNumber]].TotDelCoop = rs[controllerNumberMap[controllerNumber]].TotDelCoop + 1;
                 }
-                else if (rs[controllerNumber].DelGrid == RobotState.DELGRID.Select)
+                else if (rs[controllerNumberMap[controllerNumber]].DelGrid == RobotState.DELGRID.Select)
                 {
                     activity_record.DelOut = 0;
                     activity_record.DelCoop = 0;
                 }
 
-                if (rs[controllerNumber].Piece == RobotState.PIECE.Select)
+                if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Select)
                 {
                     activity_record.Cone = 0;
                     activity_record.Cube = 0;
                 }
 
-                if (rs[controllerNumber].DelFloor == RobotState.DELFLOOR.Success)
+                if (rs[controllerNumberMap[controllerNumber]].DelFloor == RobotState.DELFLOOR.Success)
                 {
                     activity_record.DelFloor = 1;
                     activity_record.DelDrop = 0;
-                    if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                    if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                     {
                         activity_record.Cone = 1;
                         activity_record.Cube = 0;
                     }
-                    else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                    else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                     {
                         activity_record.Cone = 0;
                         activity_record.Cube = 1;
                     }
                 }
-                else if (rs[controllerNumber].DelFloor == RobotState.DELFLOOR.Drop)
+                else if (rs[controllerNumberMap[controllerNumber]].DelFloor == RobotState.DELFLOOR.Drop)
                 {
                     activity_record.DelFloor = 0;
                     activity_record.DelDrop = 1;
-                    if (rs[controllerNumber].Piece == RobotState.PIECE.Cone)
+                    if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cone)
                     {
                         activity_record.Cone = 1;
                         activity_record.Cube = 0;
                     }
-                    else if (rs[controllerNumber].Piece == RobotState.PIECE.Cube)
+                    else if (rs[controllerNumberMap[controllerNumber]].Piece == RobotState.PIECE.Cube)
                     {
                         activity_record.Cone = 0;
                         activity_record.Cube = 1;
                     }
                 }
-                else if (rs[controllerNumber].DelFloor == RobotState.DELFLOOR.Select)
+                else if (rs[controllerNumberMap[controllerNumber]].DelFloor == RobotState.DELFLOOR.Select)
                 {
                     activity_record.DelFloor = 0;
                     activity_record.DelDrop = 0;
                 }
 
-                if (rs[controllerNumber].Acq == RobotState.ACQ.Chute)
+                if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Chute)
                 {
                     activity_record.AcqSub1 = 1;
                     activity_record.AcqSub2 = 0;
@@ -1696,7 +1715,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 0;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Shelf)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Shelf)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 1;
@@ -1705,7 +1724,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 0;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Opp)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Opp)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1714,7 +1733,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 1;
                     activity_record.AcqFOther = 0;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Other)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Other)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1723,7 +1742,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 1;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Floor_Comm)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Floor_Comm)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1732,7 +1751,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 0;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Floor_Load)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Floor_Load)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1741,7 +1760,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 0;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Floor_Load)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Floor_Load)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1750,7 +1769,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 0;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Floor_Neut)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Floor_Neut)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1759,7 +1778,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOpps = 0;
                     activity_record.AcqFOther = 1;
                 }
-                else if (rs[controllerNumber].Acq == RobotState.ACQ.Select)
+                else if (rs[controllerNumberMap[controllerNumber]].Acq == RobotState.ACQ.Select)
                 {
                     activity_record.AcqSub1 = 0;
                     activity_record.AcqSub2 = 0;
@@ -1769,7 +1788,7 @@ namespace T250DynoScout_v2023
                     activity_record.AcqFOther = 0;
                 }
 
-                if (rs[controllerNumber].DelRow == RobotState.DELROW.Select)
+                if (rs[controllerNumberMap[controllerNumber]].DelRow == RobotState.DELROW.Select)
                 {
                     activity_record.DelTop = 0;
                     activity_record.DelMid = 0;
@@ -1781,39 +1800,39 @@ namespace T250DynoScout_v2023
                 seasonframework.SaveChanges();
 
                 //Reset Values
-                rs[controllerNumber].DelRow = RobotState.DELROW.Select;
-                rs[controllerNumber].DelGrid = RobotState.DELGRID.Select;
-                rs[controllerNumber].DelFloor = RobotState.DELFLOOR.Select;
-                rs[controllerNumber].Piece = RobotState.PIECE.Select;
-                rs[controllerNumber].Acq = RobotState.ACQ.Select;
-                rs[controllerNumber].Nodelbl = RobotState.NODELBL.Select;
-                rs[controllerNumber].Floorlbl = RobotState.FLOORLBL.Select;
-                rs[controllerNumber].TransactionCheck = false;
+                rs[controllerNumberMap[controllerNumber]].DelRow = RobotState.DELROW.Select;
+                rs[controllerNumberMap[controllerNumber]].DelGrid = RobotState.DELGRID.Select;
+                rs[controllerNumberMap[controllerNumber]].DelFloor = RobotState.DELFLOOR.Select;
+                rs[controllerNumberMap[controllerNumber]].Piece = RobotState.PIECE.Select;
+                rs[controllerNumberMap[controllerNumber]].Acq = RobotState.ACQ.Select;
+                rs[controllerNumberMap[controllerNumber]].Nodelbl = RobotState.NODELBL.Select;
+                rs[controllerNumberMap[controllerNumber]].Floorlbl = RobotState.FLOORLBL.Select;
+                rs[controllerNumberMap[controllerNumber]].TransactionCheck = false;
             }
-            else if (gamepad.RightTrigger_Press && !rs[controllerNumber].NoSho && rs[controllerNumber].TransactionCheck == false)
+            else if (gamepad.RightTrigger_Press && !rs[controllerNumberMap[controllerNumber]].NoSho && rs[controllerNumberMap[controllerNumber]].TransactionCheck == false)
             {
-                rs[controllerNumber].ScouterError = rs[controllerNumber].ScouterError + 100;
+                rs[controllerNumberMap[controllerNumber]].ScouterError = rs[controllerNumberMap[controllerNumber]].ScouterError + 100;
             }
 
             // 2023 Changing modes
-            if (gamepad.BackButton_Press && rs[controllerNumber].Current_Mode == RobotState.ROBOT_MODE.Auto && !rs[controllerNumber].AUTO && !rs[controllerNumber].NoSho)
+            if (gamepad.BackButton_Press && rs[controllerNumberMap[controllerNumber]].Current_Mode == RobotState.ROBOT_MODE.Auto && !rs[controllerNumberMap[controllerNumber]].AUTO && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
-                rs[controllerNumber].Desired_Mode = RobotState.ROBOT_MODE.Endgame;
-                rs[controllerNumber].Current_Mode = RobotState.ROBOT_MODE.Teleop;
+                rs[controllerNumberMap[controllerNumber]].Desired_Mode = RobotState.ROBOT_MODE.Endgame;
+                rs[controllerNumberMap[controllerNumber]].Current_Mode = RobotState.ROBOT_MODE.Teleop;
             }
-            else if (gamepad.BackButton_Press && rs[controllerNumber].Current_Mode == RobotState.ROBOT_MODE.Teleop && !rs[controllerNumber].NoSho)
+            else if (gamepad.BackButton_Press && rs[controllerNumberMap[controllerNumber]].Current_Mode == RobotState.ROBOT_MODE.Teleop && !rs[controllerNumberMap[controllerNumber]].NoSho)
 
             {
-                rs[controllerNumber].Desired_Mode = RobotState.ROBOT_MODE.Teleop;
-                rs[controllerNumber].Current_Mode = RobotState.ROBOT_MODE.Endgame;
-                rs[controllerNumber].EngageTime_StopWatch.Start();
-                rs[controllerNumber].EngageTime = rs[controllerNumber].EngageTime_StopWatch.Elapsed;
-                rs[controllerNumber].EngageTime_StopWatch_running = true;
+                rs[controllerNumberMap[controllerNumber]].Desired_Mode = RobotState.ROBOT_MODE.Teleop;
+                rs[controllerNumberMap[controllerNumber]].Current_Mode = RobotState.ROBOT_MODE.Endgame;
+                rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Start();
+                rs[controllerNumberMap[controllerNumber]].EngageTime = rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch.Elapsed;
+                rs[controllerNumberMap[controllerNumber]].EngageTime_StopWatch_running = true;
             }
-            else if (gamepad.BackButton_Press && rs[controllerNumber].Current_Mode == RobotState.ROBOT_MODE.Endgame && !rs[controllerNumber].NoSho)
+            else if (gamepad.BackButton_Press && rs[controllerNumberMap[controllerNumber]].Current_Mode == RobotState.ROBOT_MODE.Endgame && !rs[controllerNumberMap[controllerNumber]].NoSho)
             {
-                rs[controllerNumber].Desired_Mode = RobotState.ROBOT_MODE.Endgame;
-                rs[controllerNumber].Current_Mode = RobotState.ROBOT_MODE.Teleop;
+                rs[controllerNumberMap[controllerNumber]].Desired_Mode = RobotState.ROBOT_MODE.Endgame;
+                rs[controllerNumberMap[controllerNumber]].Current_Mode = RobotState.ROBOT_MODE.Teleop;
             }
         }
     }

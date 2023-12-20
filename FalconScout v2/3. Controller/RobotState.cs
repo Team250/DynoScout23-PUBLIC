@@ -30,6 +30,8 @@ namespace T250DynoScout_v2023
         //public enum SCOUTER_NAME_ALT { Select_AltName, Sub1, Sub2, Sub3, }
         public enum SCOUTER_NAME { Select_Name, Scouter1, Scouter2, Scouter3, Scouter4, Scouter5, Scouter6, Scouter7, Scouter8, Scouter9, Scouter10, Scouter11, Scouter12 }
 
+        public int ctr_number;
+
         public int APoints;
         public int GPoints;
         public int CPoints;

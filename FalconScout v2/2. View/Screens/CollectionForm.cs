@@ -7,6 +7,7 @@ using SlimDX.DirectInput;
 using System.IO;
 using System.Net;
 using System.Threading;
+using T250DynoScout_v2020;
 
 namespace T250DynoScout_v2023
 {
@@ -16,7 +17,7 @@ namespace T250DynoScout_v2023
         DirectInput Input = new DirectInput();
         GamePad[] gamePads;
 
-        RobotState[] Robots = new RobotState[6];                            //Contains the state of each Scout's match tracking
+        public static RobotState[] Robots = new RobotState[6];                            //Contains the state of each Scout's match tracking
         Controllers controllers = new Controllers();                        //Array of six Xbox controllers 
         Utilities utilities = new Utilities();                              //Instantiate the Utilities class
 
@@ -31,7 +32,7 @@ namespace T250DynoScout_v2023
         SeasonContext seasonframework = new SeasonContext();                //This is the context, meaning the entire database structure supporting this application.
 
         public string eventcode;                                            //The event code of the selected event
-        int currentmatch = 0;                                               //The match number currently selected and being tracked
+        public static int currentmatch = 0;                                               //The match number currently selected and being tracked
         public string regional;
 
         //Name: MainScreen()
@@ -89,6 +90,7 @@ namespace T250DynoScout_v2023
         // #EndMatch
         private void btnNextMatch_Click(object sender, EventArgs e)
         {
+            List<string> ScoutList = new List<string>();
             if (cbxEndMatch.Checked)
             {
                 for (int i = 0; i <= 5; i++)
@@ -690,8 +692,6 @@ namespace T250DynoScout_v2023
                     cbxEndMatch.Checked = false;
                 }
 
-                DialogResult dialogResult = MessageBox.Show("Do you want to reset scouter names", "Please Confirm", MessageBoxButtons.YesNo);
-
                 //reset values
                 for (int i = 0; i <= 5; i++)
                 {
@@ -728,15 +728,6 @@ namespace T250DynoScout_v2023
 
                     Robots[i].match_event = RobotState.MATCHEVENT_NAME.Match_Event;
 
-                    if (dialogResult == DialogResult.Yes)
-                    {
-                        Robots[i]._ScouterName = RobotState.SCOUTER_NAME.Select_Name;
-                    }
-                    else if (dialogResult == DialogResult.No)
-                    {
-                        //Don't reset names
-                    }
-
                     Robots[i].Current_Mode = RobotState.ROBOT_MODE.Auto;
 
                     Robots[i].AUTO = true;
@@ -761,6 +752,18 @@ namespace T250DynoScout_v2023
                     Robots[i].TotDelOut = 0;
                 }
 
+                DialogResult dialogResult = MessageBox.Show("Do you want to swap scouter locations", "Please Confirm", MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.Yes)
+                {
+                    ScouterAssignment frm = new ScouterAssignment();
+                    frm.Show();
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    //Don't reset names
+                }
+
                 if (currentmatch == InMemoryMatchList.Count)
                     MessageBox.Show("You are at the last match.");
                 else
@@ -778,6 +781,12 @@ namespace T250DynoScout_v2023
                     Robots[0].Desired_Mode = Robots[1].Desired_Mode = Robots[2].Desired_Mode = Robots[3].Desired_Mode = Robots[4].Desired_Mode = Robots[5].Desired_Mode = RobotState.ROBOT_MODE.Auto;
                     Robots[0].Current_Mode = Robots[1].Current_Mode = Robots[2].Current_Mode = Robots[3].Current_Mode = Robots[4].Current_Mode = Robots[5].Current_Mode = RobotState.ROBOT_MODE.Auto;
                 }
+
+                for (int i = 0; i < Robots.Length; i++)
+                {
+                    ScoutList.Add(Robots[i].getScouterName(RobotState.SCOUTER_NAME.Select_Name).ToString());
+                }
+                int l = 5;
             }
             else
             {
@@ -952,7 +961,7 @@ namespace T250DynoScout_v2023
                 Log("Event Code -> " + eventcode);
 
                 //#AuthKey
-                string uri = "http://www.thebluealliance.com/api/v3/event/2023" + eventcode + "/teams?X-TBA-Auth-Key=YOUR_API_KEY_HERE";
+                string uri = "http://www.thebluealliance.com/api/v3/event/2023" + eventcode + "/teams?X-TBA-Auth-Key=vFPjrLNK2YdJfu68TmgwJ2mbtBtPU4ryELf42nqXjuK2NBZdMEda63XfhZ41AGvr";
 
                 req = WebRequest.Create(uri);
 
@@ -1024,7 +1033,7 @@ namespace T250DynoScout_v2023
                 //Get the matches from the Blue Alliance API
 
                 //#AuthKey
-                uri = "http://www.thebluealliance.com/api/v3/event/2023" + eventcode + "/matches?X-TBA-Auth-Key=YOUR_API_KEY_HERE";
+                uri = "http://www.thebluealliance.com/api/v3/event/2023" + eventcode + "/matches?X-TBA-Auth-Key=vFPjrLNK2YdJfu68TmgwJ2mbtBtPU4ryELf42nqXjuK2NBZdMEda63XfhZ41AGvr";
  
                 try
                 {
@@ -1388,7 +1397,7 @@ namespace T250DynoScout_v2023
 
 
                 //#AuthKey
-                uri = "http://www.thebluealliance.com/api/v3/event/2023" + eventcode + "/rankings?X-TBA-Auth-Key=YOUR_API_KEY_HERE";
+                uri = "http://www.thebluealliance.com/api/v3/event/2023" + eventcode + "/rankings?X-TBA-Auth-Key=vFPjrLNK2YdJfu68TmgwJ2mbtBtPU4ryELf42nqXjuK2NBZdMEda63XfhZ41AGvr";
                 try
                 {
                     req = WebRequest.Create(uri);

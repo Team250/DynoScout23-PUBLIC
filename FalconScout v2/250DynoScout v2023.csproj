@@ -130,6 +130,12 @@
     <Compile Include="1. Model\BuildInitialDatabase.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="2. View\Screens\ScouterAssignment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="2. View\Screens\ScouterAssignment.designer.cs">
+      <DependentUpon>ScouterAssignment.cs</DependentUpon>
+    </Compile>
     <Compile Include="3. Controller\ModeCode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +173,9 @@
     <EmbeddedResource Include="2. View\Screens\CollectionForm.resx">
       <DependentUpon>CollectionForm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="2. View\Screens\ScouterAssignment.resx">
+      <DependentUpon>ScouterAssignment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="2. View\Screens\TimerForm.resx">
       <DependentUpon>TimerForm.cs</DependentUpon>
